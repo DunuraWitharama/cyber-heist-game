@@ -57,6 +57,7 @@ function create() {
 
     cursors = this.input.keyboard.createCursorKeys();
     enemy = this.physics.add.sprite(100, 100, 'enemy');
+    this.physics.add.collider(player, enemy, hitEnemy, null, this);
 
     enemy.setVelocity(120, 120);
     enemy.setBounce(1, 1);
@@ -128,4 +129,21 @@ function winGame(){
 
 }
 
+function hitEnemy(){
+
+    this.physics.pause();
+
+    player.setTint(0xff0000);
+
+    this.add.text(
+        this.cameras.main.width / 2 - 160,
+        this.cameras.main.height / 2,
+        'GAME OVER',
+        {
+            fontSize: '64px',
+            fill: '#ff0000'
+        }
+    );
+
+}
 
