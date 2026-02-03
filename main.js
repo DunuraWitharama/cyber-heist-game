@@ -41,7 +41,12 @@ function preload() {
 }
 
 function create() {
-    this.add.image(0, 0, 'background').setOrigin(0,0);
+    let bg = this.add.image(400, 300, 'background');
+
+    bg.displayWidth = this.sys.game.config.width;
+    bg.displayHeight = this.sys.game.config.height;
+
+
 
 
     player = this.physics.add.sprite(400, 300, 'player');
