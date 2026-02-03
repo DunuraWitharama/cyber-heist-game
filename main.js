@@ -136,14 +136,18 @@ function hitEnemy(){
     player.setTint(0xff0000);
 
     this.add.text(
-        this.cameras.main.width / 2 - 160,
-        this.cameras.main.height / 2,
-        'GAME OVER',
-        {
-            fontSize: '64px',
-            fill: '#ff0000'
-        }
-    );
+    this.cameras.main.width / 2 - 180,
+    this.cameras.main.height / 2 + 80,
+    'Click anywhere to restart',
+    {
+        fontSize: '24px',
+        fill: '#ffffff'
+    }
+);
+this.input.once('pointerdown', () => {
+    this.scene.restart();
+});
+
 
 }
 
