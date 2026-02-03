@@ -59,6 +59,10 @@ class GameScene extends Phaser.Scene {
         this.load.image('enemy','assets/enemy.png');
         this.load.image('background','assets/floor.jpg');
         this.load.image('energy','assets/energy.png');
+        this.load.audio('collect','assets/audio/collect.mp3');
+        this.load.audio('gameover','assets/audio/gameover.mp3');
+        this.load.audio('win','assets/audio/win.mp3');
+
 
     }
 
@@ -98,6 +102,10 @@ class GameScene extends Phaser.Scene {
             fontSize:'32px',
             fill:'#ffffff'
         });
+        this.collectSound = this.sound.add('collect');
+        this.gameoverSound = this.sound.add('gameover');
+        this.winSound = this.sound.add('win');
+
 
     }
 
@@ -126,6 +134,7 @@ class GameScene extends Phaser.Scene {
 //////////////////// GAME FUNCTIONS ////////////////////
 
 function collectEnergy(player, energy){
+    this.collectSound.play();
 
     energy.disableBody(true,true);
 
@@ -151,6 +160,7 @@ function collectEnergy(player, energy){
 }
 
 function winGame(){
+    this.winSound.play();
 
     this.physics.pause();
 
@@ -175,6 +185,7 @@ function winGame(){
 }
 
 function hitEnemy(){
+    this.gameoverSound.play();
 
     this.physics.pause();
 
