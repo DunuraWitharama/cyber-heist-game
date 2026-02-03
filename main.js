@@ -57,7 +57,8 @@ class GameScene extends Phaser.Scene {
 
     preload(){
 
-        this.load.image('player','assets/player.png'); // ⭐ use local sprite if you replaced it
+        this.load.image('player','https://labs.phaser.io/assets/sprites/phaser-dude.png');
+ 
         this.load.image('enemy','assets/enemy.png');
         this.load.image('background','assets/floor.jpg');
         this.load.image('energy','assets/energy.png');
