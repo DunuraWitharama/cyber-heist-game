@@ -34,6 +34,10 @@ function create() {
 
     player = this.physics.add.sprite(400, 300, 'player');
 
+    player.setCollideWorldBounds(true);
+    this.physics.world.setBounds(0, 0, 800, 600);
+
+
     cursors = this.input.keyboard.createCursorKeys();
 
 }
