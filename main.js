@@ -88,7 +88,7 @@ class GameScene extends Phaser.Scene {
         player = this.physics.add.sprite(width/2, height/2,'player');
 
         player.setCollideWorldBounds(true);
-        player.setScale(0.5); // adjust if needed
+        player.setScale(1); // adjust if needed
 
         cursors = this.input.keyboard.createCursorKeys();
 
