@@ -16,14 +16,16 @@ class StartScene extends Phaser.Scene {
 
     create(){
 
+        const { width, height } = this.scale;
+
         this.cameras.main.setBackgroundColor('#000');
 
-        this.add.text(180,150,'CYBER HEIST',{
+        this.add.text(width/2, height*0.25,'CYBER HEIST',{
             fontSize:'64px',
             fill:'#00ffcc'
-        });
+        }).setOrigin(0.5);
 
-        this.add.text(120,260,
+        this.add.text(width/2, height*0.45,
             'A rogue AI controls the network.\n' +
             'You are the last hacker.\n' +
             'Collect energy cores.\nAvoid security drones.',
@@ -32,17 +34,16 @@ class StartScene extends Phaser.Scene {
                 fill:'#ffffff',
                 align:'center'
             }
-        );
+        ).setOrigin(0.5);
 
-        this.add.text(230,450,'Press ENTER to Start',{
+        this.add.text(width/2, height*0.75,'Press ENTER to Start',{
             fontSize:'28px',
             fill:'#ffff00'
-        });
+        }).setOrigin(0.5);
 
         this.input.keyboard.once('keydown-ENTER', () => {
             this.scene.start('GameScene');
         });
-
     }
 }
 
@@ -56,7 +57,7 @@ class GameScene extends Phaser.Scene {
 
     preload(){
 
-        this.load.image('player','https://labs.phaser.io/assets/sprites/phaser-dude.png');
+        this.load.image('player','assets/player.png'); // ⭐ use local sprite if you replaced it
         this.load.image('enemy','assets/enemy.png');
         this.load.image('background','assets/floor.jpg');
         this.load.image('energy','assets/energy.png');
@@ -68,26 +69,32 @@ class GameScene extends Phaser.Scene {
 
     create(){
 
+        const { width, height } = this.scale;
+
         // RESET VALUES
         score = 0;
         enemySpeed = 120;
 
-        let bg = this.add.image(400,300,'background');
-        bg.displayWidth = this.sys.game.config.width;
-        bg.displayHeight = this.sys.game.config.height;
+        // BACKGROUND
+        let bg = this.add.image(width/2, height/2,'background');
+        bg.setDisplaySize(width, height);
         bg.setDepth(-1);
 
-        player = this.physics.add.sprite(400,300,'player');
-        player.setCollideWorldBounds(true);
+        // WORLD BOUNDS (responsive)
+        this.physics.world.setBounds(0,0,width,height);
 
-        this.physics.world.setBounds(0,0,800,600);
+        // PLAYER
+        player = this.physics.add.sprite(width/2, height/2,'player');
+
+        player.setCollideWorldBounds(true);
+        player.setScale(0.5); // adjust if needed
 
         cursors = this.input.keyboard.createCursorKeys();
 
         // ENEMY
         enemy = this.physics.add.sprite(100,100,'enemy');
 
-        setEnemyVelocity(); // ⭐ USE SMART SPEED
+        setEnemyVelocity();
 
         enemy.setBounce(1,1);
         enemy.setCollideWorldBounds(true);
@@ -95,13 +102,13 @@ class GameScene extends Phaser.Scene {
         this.physics.add.collider(player, enemy, hitEnemy, null, this);
 
         // ENERGY
-        energy = this.physics.add.sprite(600,400,'energy');
+        energy = this.physics.add.sprite(width*0.75, height*0.7,'energy');
         energy.setCollideWorldBounds(true);
 
         this.physics.add.overlap(player, energy, collectEnergy, null, this);
 
         // SCORE
-        scoreText = this.add.text(16,16,'Score: 0',{
+        scoreText = this.add.text(20,20,'Score: 0',{
             fontSize:'32px',
             fill:'#ffffff'
         });
@@ -129,16 +136,19 @@ class GameScene extends Phaser.Scene {
         else if (cursors.down.isDown){
             player.setVelocityY(200);
         }
-
     }
 }
 
-//////////////////// HELPER FUNCTION ////////////////////
+//////////////////// HELPER ////////////////////
 
 function setEnemyVelocity(){
 
     let xSpeed = Phaser.Math.Between(enemySpeed * -1, enemySpeed);
     let ySpeed = Phaser.Math.Between(enemySpeed * -1, enemySpeed);
+
+    // prevent enemy from barely moving
+    if(Math.abs(xSpeed) < 40) xSpeed = enemySpeed;
+    if(Math.abs(ySpeed) < 40) ySpeed = enemySpeed;
 
     enemy.setVelocity(xSpeed, ySpeed);
 }
@@ -154,8 +164,8 @@ function collectEnergy(player, energy){
     score += 10;
     scoreText.setText('Score: ' + score);
 
-    // 🔥 INCREASE DIFFICULTY
-    enemySpeed += 10;
+    // INCREASE DIFFICULTY
+    enemySpeed += 12;
     setEnemyVelocity();
 
     if(score >= 100){
@@ -163,12 +173,14 @@ function collectEnergy(player, energy){
         return;
     }
 
+    const { width, height } = this.scale;
+
     setTimeout(() => {
 
         energy.enableBody(
             true,
-            Math.random()*700+50,
-            Math.random()*500+50,
+            Phaser.Math.Between(50, width-50),
+            Phaser.Math.Between(50, height-50),
             true,
             true
         );
@@ -186,15 +198,15 @@ function winGame(){
 
     scoreText.setText("YOU WIN! 🎉");
 
-    this.add.text(
-        this.cameras.main.width/2 - 160,
-        this.cameras.main.height/2 + 60,
+    const { width, height } = this.scale;
+
+    this.add.text(width/2, height/2 + 60,
         'Click to Restart',
         {
             fontSize:'28px',
             fill:'#ffffff'
         }
-    );
+    ).setOrigin(0.5);
 
     this.input.once('pointerdown', () => {
         this.scene.restart();
@@ -211,43 +223,46 @@ function hitEnemy(){
 
     player.setTint(0xff0000);
 
-    this.add.text(
-        this.cameras.main.width/2 - 180,
-        this.cameras.main.height/2,
+    const { width, height } = this.scale;
+
+    this.add.text(width/2, height/2,
         'GAME OVER',
         {
             fontSize:'64px',
             fill:'#ff0000'
         }
-    );
+    ).setOrigin(0.5);
 
-    this.add.text(
-        this.cameras.main.width/2 - 160,
-        this.cameras.main.height/2 + 80,
+    this.add.text(width/2, height/2 + 80,
         'Click anywhere to restart',
         {
             fontSize:'24px',
             fill:'#ffffff'
         }
-    );
+    ).setOrigin(0.5);
 
     this.input.once('pointerdown', () => {
         this.scene.restart();
     });
-
 }
 
 //////////////////// GAME CONFIG ////////////////////
 
 const config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
-    backgroundColor: "#0a0a0a",
+
+    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 800,
+        height: 600
+    },
+
     physics: {
         default: 'arcade',
         arcade: { debug:false }
     },
+
     scene: [StartScene, GameScene]
 };
 
