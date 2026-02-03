@@ -21,6 +21,7 @@ const game = new Phaser.Game(config);
 let player;
 let enemy;
 let cursors;
+let energy;
 
 function preload() {
 
@@ -30,6 +31,7 @@ function preload() {
     );
     this.load.image('enemy', 'assets/enemy.png');
     this.load.image('background', 'assets/floor.jpg');
+    this.load.image('energy', 'assets/energy.png');
 
 
 
@@ -51,6 +53,9 @@ function create() {
     enemy.setVelocity(120, 120);
     enemy.setBounce(1, 1);
     enemy.setCollideWorldBounds(true);
+    energy = this.physics.add.sprite(600, 400, 'energy');
+    energy.setCollideWorldBounds(true);
+    this.physics.add.overlap(player, energy, collectEnergy, null, this);
 
 
 }
@@ -74,5 +79,22 @@ function update() {
     else if (cursors.down.isDown){
         player.setVelocityY(200);
     }
+
+}
+function collectEnergy(player, energy){
+
+    energy.disableBody(true, true);
+
+    setTimeout(() => {
+
+        energy.enableBody(
+            true,
+            Math.random() * 700 + 50,
+            Math.random() * 500 + 50,
+            true,
+            true
+        );
+
+    }, 1000);
 
 }
