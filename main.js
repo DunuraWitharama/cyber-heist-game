@@ -1,3 +1,6 @@
+let score = 0;
+let scoreText;
+
 const config = {
     type: Phaser.AUTO,
     width: 800,
@@ -56,6 +59,10 @@ function create() {
     energy = this.physics.add.sprite(600, 400, 'energy');
     energy.setCollideWorldBounds(true);
     this.physics.add.overlap(player, energy, collectEnergy, null, this);
+    scoreText = this.add.text(16, 16, 'Score: 0', {
+    fontSize: '32px',
+    fill: '#ffffff'
+});
 
 
 }
@@ -85,6 +92,10 @@ function collectEnergy(player, energy){
 
     energy.disableBody(true, true);
 
+    score += 10;
+
+    scoreText.setText('Score: ' + score);
+
     setTimeout(() => {
 
         energy.enableBody(
@@ -98,3 +109,4 @@ function collectEnergy(player, energy){
     }, 1000);
 
 }
+
