@@ -19,6 +19,7 @@ const config = {
 const game = new Phaser.Game(config);
 
 let player;
+let enemy;
 let cursors;
 
 function preload() {
@@ -27,6 +28,9 @@ function preload() {
         'player',
         'https://labs.phaser.io/assets/sprites/phaser-dude.png'
     );
+    this.load.image('enemy', 'assets/enemy.png');
+
+
 
 }
 
@@ -39,6 +43,12 @@ function create() {
 
 
     cursors = this.input.keyboard.createCursorKeys();
+    enemy = this.physics.add.sprite(100, 100, 'enemy');
+
+    enemy.setVelocity(120, 120);
+    enemy.setBounce(1, 1);
+    enemy.setCollideWorldBounds(true);
+
 
 }
 
