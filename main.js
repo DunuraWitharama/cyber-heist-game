@@ -112,6 +112,20 @@ function collectEnergy(player, energy){
         );
 
     }, 1000);
+    if(score >= 100){
+    winGame.call(this);
+}
+
 
 }
+function winGame(){
+
+    this.physics.pause();
+
+    player.setTint(0x00ff00);
+
+    scoreText.setText("YOU WIN! 🎉");
+
+}
+
 
