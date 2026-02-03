@@ -185,6 +185,8 @@ function winGame(){
 }
 
 function hitEnemy(){
+    this.cameras.main.shake(500, 0.02);
+
     this.gameoverSound.play();
 
     this.physics.pause();
