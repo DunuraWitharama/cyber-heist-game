@@ -1,3 +1,4 @@
+let enemySpeed = 120;
 let score = 0;
 let scoreText;
 let player;
@@ -59,17 +60,17 @@ class GameScene extends Phaser.Scene {
         this.load.image('enemy','assets/enemy.png');
         this.load.image('background','assets/floor.jpg');
         this.load.image('energy','assets/energy.png');
+
         this.load.audio('collect','assets/audio/collect.mp3');
         this.load.audio('gameover','assets/audio/gameover.mp3');
         this.load.audio('win','assets/audio/win.mp3');
-
-
     }
 
     create(){
 
-        // RESET SCORE
+        // RESET VALUES
         score = 0;
+        enemySpeed = 120;
 
         let bg = this.add.image(400,300,'background');
         bg.displayWidth = this.sys.game.config.width;
@@ -85,7 +86,9 @@ class GameScene extends Phaser.Scene {
 
         // ENEMY
         enemy = this.physics.add.sprite(100,100,'enemy');
-        enemy.setVelocity(120,120);
+
+        setEnemyVelocity(); // ⭐ USE SMART SPEED
+
         enemy.setBounce(1,1);
         enemy.setCollideWorldBounds(true);
 
@@ -97,16 +100,16 @@ class GameScene extends Phaser.Scene {
 
         this.physics.add.overlap(player, energy, collectEnergy, null, this);
 
-        // SCORE UI
+        // SCORE
         scoreText = this.add.text(16,16,'Score: 0',{
             fontSize:'32px',
             fill:'#ffffff'
         });
+
+        // SOUNDS
         this.collectSound = this.sound.add('collect');
         this.gameoverSound = this.sound.add('gameover');
         this.winSound = this.sound.add('win');
-
-
     }
 
     update(){
@@ -128,18 +131,32 @@ class GameScene extends Phaser.Scene {
         }
 
     }
+}
 
+//////////////////// HELPER FUNCTION ////////////////////
+
+function setEnemyVelocity(){
+
+    let xSpeed = Phaser.Math.Between(enemySpeed * -1, enemySpeed);
+    let ySpeed = Phaser.Math.Between(enemySpeed * -1, enemySpeed);
+
+    enemy.setVelocity(xSpeed, ySpeed);
 }
 
 //////////////////// GAME FUNCTIONS ////////////////////
 
 function collectEnergy(player, energy){
+
     this.collectSound.play();
 
     energy.disableBody(true,true);
 
     score += 10;
     scoreText.setText('Score: ' + score);
+
+    // 🔥 INCREASE DIFFICULTY
+    enemySpeed += 10;
+    setEnemyVelocity();
 
     if(score >= 100){
         winGame.call(this);
@@ -160,6 +177,7 @@ function collectEnergy(player, energy){
 }
 
 function winGame(){
+
     this.winSound.play();
 
     this.physics.pause();
@@ -181,10 +199,10 @@ function winGame(){
     this.input.once('pointerdown', () => {
         this.scene.restart();
     });
-
 }
 
 function hitEnemy(){
+
     this.cameras.main.shake(500, 0.02);
 
     this.gameoverSound.play();
