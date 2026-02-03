@@ -29,12 +29,15 @@ function preload() {
         'https://labs.phaser.io/assets/sprites/phaser-dude.png'
     );
     this.load.image('enemy', 'assets/enemy.png');
+    this.load.image('background', 'assets/floor.jpg');
 
 
 
 }
 
 function create() {
+    this.add.image(0, 0, 'background').setOrigin(0,0);
+
 
     player = this.physics.add.sprite(400, 300, 'player');
 
