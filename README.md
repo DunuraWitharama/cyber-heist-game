@@ -3,7 +3,7 @@
 A fast-paced browser game built using **Phaser.js** where you play as a hacker collecting energy cores while avoiding deadly security drones.
 
 ## 👉 Play Now
-https://yourusername.github.io/cyber-heist-game
+https://DunuraWitharama.github.io/cyber-heist-game
 
 ## 🚀 Features
 - Scene-based architecture
